@@ -62,3 +62,20 @@ exports.deleteIntegration = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+exports.updateIntegrationSettings = async (req, res) => {
+    const integration = await Integration.findById(req.params.id);
+
+    if (integration) {
+        integration.apiKey = req.body.apiKey || integration.apiKey;
+        integration.apiSecret = req.body.apiSecret || integration.apiSecret;
+        integration.sellerId = req.body.sellerId || integration.sellerId;
+        integration.settings = req.body.settings || integration.settings;
+
+        const updatedIntegration = await integration.save();
+
+        res.json(updatedIntegration);
+    } else {
+        res.status(404).json({ message: 'Integration not found' });
+    }
+};

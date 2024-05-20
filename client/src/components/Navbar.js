@@ -3,17 +3,19 @@ import { Link } from 'react-router-dom';
 
 const Navbar = () => {
     return (
-        <nav className="bg-gray-800 p-4">
-            <div className="container mx-auto flex justify-between items-center">
-                <Link to="/" className="text-white text-xl font-bold">E-Ticaret Yönetim Sistemi</Link>
-                <div>
-                    <Link to="/dashboard" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</Link>
-                    <Link to="/products" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Ürünler</Link>
-                    <Link to="/orders" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Siparişler</Link>
-                    <Link to="/settings" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Ayarlar</Link>
-                </div>
+        <div className="navbar bg-base-100">
+            <div className="flex-1">
+                <Link to="/" className="btn btn-ghost normal-case text-xl">E-Ticaret Yönetim Sistemi</Link>
             </div>
-        </nav>
+            <div className="flex-none">
+                <ul className="menu menu-horizontal px-1">
+                    <li><Link to="/">Dashboard</Link></li>
+                    <li><Link to="/products">Ürünler</Link></li>
+                    <li><Link to="/orders">Siparişler</Link></li>
+                    <li><Link to="/settings">Ayarlar</Link></li>
+                </ul>
+            </div>
+        </div>
     );
 };
 

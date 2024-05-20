@@ -1,20 +1,20 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Dashboard from './pages/Dashboard';
 import Navbar from './components/Navbar';
+import Dashboard from './pages/Dashboard';
 
-const App = () => {
+function App() {
     return (
         <Router>
-            <Navbar />
-            <div className="container mx-auto p-4">
+            <div className="min-h-screen bg-gray-100">
+                <Navbar />
                 <Switch>
-                    <Route path="/dashboard" component={Dashboard} />
-                    {/* Diğer sayfa bileşenlerini buraya ekleyin */}
+                    <Route exact path="/" component={Dashboard} />
+                    {/* Diğer route'lar buraya gelecek */}
                 </Switch>
             </div>
         </Router>
     );
-};
+}
 
 export default App;

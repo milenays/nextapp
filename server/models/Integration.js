@@ -5,11 +5,6 @@ const integrationSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    type: {
-        type: String,
-        enum: ['marketplace', 'ecommerce', 'system'],
-        required: true,
-    },
     apiKey: {
         type: String,
         required: true,
@@ -24,7 +19,7 @@ const integrationSchema = new mongoose.Schema({
     },
     settings: {
         type: mongoose.Schema.Types.Mixed,
-        default: {},
+        required: true,
     },
 }, {
     timestamps: true,

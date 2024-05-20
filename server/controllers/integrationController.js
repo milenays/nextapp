@@ -1,81 +1,55 @@
+const asyncHandler = require('express-async-handler');
 const Integration = require('../models/Integration');
 
-// Entegrasyon ekleme
-exports.addIntegration = async (req, res) => {
-    try {
-        const integration = new Integration(req.body);
-        const savedIntegration = await integration.save();
-        res.status(201).json(savedIntegration);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-};
-
 // Entegrasyonları listeleme
-exports.getIntegrations = async (req, res) => {
-    try {
-        const integrations = await Integration.find();
-        res.json(integrations);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
+exports.getIntegrations = asyncHandler(async (req, res) => {
+    const integrations = await Integration.find({});
+    res.json(integrations);
+});
 
-// Entegrasyon detay görüntüleme
-exports.getIntegrationById = async (req, res) => {
-    try {
-        const integration = await Integration.findById(req.params.id);
-        if (integration) {
-            res.json(integration);
-        } else {
-            res.status(404).json({ message: 'Integration not found' });
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
+// Entegrasyon ekleme
+exports.addIntegration = asyncHandler(async (req, res) => {
+    const { name, apiKey, apiSecret, sellerId, settings } = req.body;
+
+    const integration = new Integration({
+        name,
+        apiKey,
+        apiSecret,
+        sellerId,
+        settings
+    });
+
+    const createdIntegration = await integration.save();
+    res.status(201).json(createdIntegration);
+});
 
 // Entegrasyon güncelleme
-exports.updateIntegration = async (req, res) => {
-    try {
-        const integration = await Integration.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (integration) {
-            res.json(integration);
-        } else {
-            res.status(404).json({ message: 'Integration not found' });
-        }
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-};
-
-// Entegrasyon silme
-exports.deleteIntegration = async (req, res) => {
-    try {
-        const integration = await Integration.findByIdAndDelete(req.params.id);
-        if (integration) {
-            res.json({ message: 'Integration removed' });
-        } else {
-            res.status(404).json({ message: 'Integration not found' });
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-exports.updateIntegrationSettings = async (req, res) => {
+exports.updateIntegration = asyncHandler(async (req, res) => {
     const integration = await Integration.findById(req.params.id);
 
     if (integration) {
+        integration.name = req.body.name || integration.name;
         integration.apiKey = req.body.apiKey || integration.apiKey;
         integration.apiSecret = req.body.apiSecret || integration.apiSecret;
         integration.sellerId = req.body.sellerId || integration.sellerId;
         integration.settings = req.body.settings || integration.settings;
 
         const updatedIntegration = await integration.save();
-
         res.json(updatedIntegration);
     } else {
         res.status(404).json({ message: 'Integration not found' });
     }
-};
+});
+
+// Entegrasyon silme
+exports.deleteIntegration = asyncHandler(async (req, res) => {
+    const integration = await Integration.findById(req.params.id);
+
+    if (integration) {
+        await integration.remove();
+        res.json({ message: 'Integration removed' });
+    } else {
+        res.status(404).json({ message: 'Integration not found' });
+    }
+});
+

@@ -1,21 +1,19 @@
 const express = require('express');
 const {
-    addIntegration,
     getIntegrations,
-    getIntegrationById,
+    addIntegration,
     updateIntegration,
-    deleteIntegration,
+    deleteIntegration
 } = require('../controllers/integrationController');
-const { protect } = require('../middlewares/authMiddleware');
+const { protect, admin } = require('../middlewares/authMiddleware');
 const router = express.Router();
 
 router.route('/')
-    .post(protect, addIntegration)
-    .get(protect, getIntegrations);
+    .get(protect, admin, getIntegrations)
+    .post(protect, admin, addIntegration);
 
 router.route('/:id')
-    .get(protect, getIntegrationById)
-    .put(protect, updateIntegration)
-    .delete(protect, deleteIntegration);
+    .put(protect, admin, updateIntegration)
+    .delete(protect, admin, deleteIntegration);
 
 module.exports = router;

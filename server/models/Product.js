@@ -1,24 +1,6 @@
 const mongoose = require('mongoose');
 
-const variantSchema = new mongoose.Schema({
-    variantName: String,
-    variantValue: String,
-    modelCode: String,
-    barcode: String,
-    stockQuantity: Number,
-    fakeStockQuantity: Number,
-    criticalStockQuantity: Number,
-    marketPrice: Number,
-    salePrice: Number,
-    purchasePrice: Number,
-});
-
 const productSchema = new mongoose.Schema({
-    uniqueID: {
-        type: String,
-        required: true,
-        unique: true,
-    },
     name: {
         type: String,
         required: true,
@@ -27,37 +9,67 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    barcode: String,
+    barcode: {
+        type: String,
+        required: true,
+    },
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
+        required: true,
     },
     brand: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Brand',
+        required: true,
     },
-    description: String,
-    desi: Number,
-    stockQuantity: Number,
-    fakeStockQuantity: Number,
-    criticalStockQuantity: Number,
-    marketPrice: Number,
-    salePrice: Number,
-    purchasePrice: Number,
-    images: [String],
-    rackCode: String,
-    areaCode: String,
-    channelPrices: [{
-        channel: String,
-        price: Number,
-    }],
-    integrations: [{
-        platform: String,
-        data: mongoose.Schema.Types.Mixed,
-    }],
-    variants: [variantSchema],
+    description: {
+        type: String,
+        required: true,
+    },
+    desi: {
+        type: Number,
+        required: true,
+    },
+    stockQuantity: {
+        type: Number,
+        required: true,
+    },
+    fakeStockQuantity: {
+        type: Number,
+    },
+    criticalStockQuantity: {
+        type: Number,
+    },
+    marketPrice: {
+        type: Number,
+        required: true,
+    },
+    salePrice: {
+        type: Number,
+        required: true,
+    },
+    purchasePrice: {
+        type: Number,
+        required: true,
+    },
+    images: [
+        {
+            type: String,
+        }
+    ],
+    shelfCode: {
+        type: String,
+        required: true,
+    },
+    areaCode: {
+        type: String,
+        required: true,
+    }
 }, {
     timestamps: true,
 });
 
-module.exports = mongoose.model('Product', productSchema);
+const Product = mongoose.model('Product', productSchema);
+
+module.exports = Product;

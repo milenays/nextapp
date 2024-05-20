@@ -6,6 +6,8 @@ const productRoutes = require('./routes/productRoutes');
 const integrationRoutes = require('./routes/integrationRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const warehouseRoutes = require('./routes/warehouseRoutes');
+const supplierRoutes = require('./routes/supplierRoutes');
+const supplyRoutes = require('./routes/supplyRoutes');
 
 dotenv.config({ path: './.env' });
 
@@ -20,6 +22,8 @@ app.use('/api/products', productRoutes);
 app.use('/api/integrations', integrationRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/warehouse', warehouseRoutes);
+app.use('/api/suppliers', supplierRoutes);
+app.use('/api/supplies', supplyRoutes);
 
 const PORT = process.env.PORT || 5000;
 

@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
 
-const settingSchema = new mongoose.Schema({
-    key: {
+const settingsSchema = new mongoose.Schema({
+    settingName: {
         type: String,
         required: true,
-        unique: true,
     },
-    value: {
+    settingValue: {
         type: mongoose.Schema.Types.Mixed,
         required: true,
     },
@@ -14,4 +13,6 @@ const settingSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-module.exports = mongoose.model('Setting', settingSchema);
+const Settings = mongoose.model('Settings', settingsSchema);
+
+module.exports = Settings;

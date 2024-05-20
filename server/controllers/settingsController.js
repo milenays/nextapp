@@ -1,32 +1,37 @@
-const Setting = require('../models/Setting');
+const asyncHandler = require('express-async-handler');
+const Settings = require('../models/Settings');
 
-// Döviz kuru ayarlarını güncelleme
-exports.updateExchangeRate = async (req, res) => {
-    const { currency, rate } = req.body;
+// Ayarları listeleme
+exports.getSettings = asyncHandler(async (req, res) => {
+    const settings = await Settings.find({});
+    res.json(settings);
+});
 
-    let setting = await Setting.findOne({ key: 'exchangeRate' });
+// Ayar ekleme veya güncelleme
+exports.addOrUpdateSetting = asyncHandler(async (req, res) => {
+    const { settingName, settingValue } = req.body;
 
-    if (setting) {
-        setting.value[currency] = rate;
-    } else {
-        setting = new Setting({
-            key: 'exchangeRate',
-            value: { [currency]: rate },
-        });
-    }
-
-    const updatedSetting = await setting.save();
-
-    res.json(updatedSetting);
-};
-
-// Döviz kuru ayarlarını alma
-exports.getExchangeRate = async (req, res) => {
-    const setting = await Setting.findOne({ key: 'exchangeRate' });
+    let setting = await Settings.findOne({ settingName });
 
     if (setting) {
-        res.json(setting.value);
+        setting.settingValue = settingValue;
+        setting = await setting.save();
     } else {
-        res.status(404).json({ message: 'Exchange rate settings not found' });
+        setting = new Settings({ settingName, settingValue });
+        setting = await setting.save();
     }
-};
+
+    res.status(201).json(setting);
+});
+
+// Ayar silme
+exports.deleteSetting = asyncHandler(async (req, res) => {
+    const setting = await Settings.findById(req.params.id);
+
+    if (setting) {
+        await setting.remove();
+        res.json({ message: 'Setting removed' });
+    } else {
+        res.status(404).json({ message: 'Setting not found' });
+    }
+});

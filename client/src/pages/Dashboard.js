@@ -30,7 +30,7 @@ const Dashboard = () => {
         <div className="container mx-auto p-4">
             <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
 
-            <div className="mb-8">
+            <div className="mb-8 bg-white p-4 rounded-lg shadow-md">
                 <h2 className="text-xl font-semibold mb-2">Günlük Satış Cirosu</h2>
                 <LineChart width={600} height={300} data={salesData}>
                     <Line type="monotone" dataKey="revenue" stroke="#8884d8" />
@@ -41,7 +41,7 @@ const Dashboard = () => {
                 </LineChart>
             </div>
 
-            <div className="mb-8">
+            <div className="mb-8 bg-white p-4 rounded-lg shadow-md">
                 <h2 className="text-xl font-semibold mb-2">Platform Bazlı Satış Cirosu</h2>
                 <PieChart width={600} height={300}>
                     <Pie data={platformSalesData} dataKey="value" nameKey="platform" cx="50%" cy="50%" outerRadius={100} fill="#8884d8">
@@ -54,7 +54,7 @@ const Dashboard = () => {
                 </PieChart>
             </div>
 
-            <div className="mb-8">
+            <div className="mb-8 bg-white p-4 rounded-lg shadow-md">
                 <h2 className="text-xl font-semibold mb-2">Kritik Stok</h2>
                 <ul>
                     {criticalStockData.map((item) => (

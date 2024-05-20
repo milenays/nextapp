@@ -32,8 +32,8 @@ exports.addUser = asyncHandler(async (req, res) => {
         _id: createdUser._id,
         name: createdUser.name,
         email: createdUser.email,
-        role: createdUser.role
-        token: generateToken(createdUser._id)
+        role: createdUser.role,
+        token: generateToken(createdUser._id) // Bu satırı kontrol edelim
     });
 });
 

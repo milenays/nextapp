@@ -4,6 +4,8 @@ const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const integrationRoutes = require('./routes/integrationRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const warehouseRoutes = require('./routes/warehouseRoutes');
 
 dotenv.config({ path: './.env' });
 
@@ -16,6 +18,8 @@ app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/integrations', integrationRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/warehouse', warehouseRoutes);
 
 const PORT = process.env.PORT || 5000;
 

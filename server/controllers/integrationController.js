@@ -7,38 +7,24 @@ exports.getIntegrations = asyncHandler(async (req, res) => {
     res.json(integrations);
 });
 
-// Entegrasyon ekleme
-exports.addIntegration = asyncHandler(async (req, res) => {
-    const { name, apiKey, apiSecret, sellerId, settings } = req.body;
+// Entegrasyon ekleme veya güncelleme
+exports.addOrUpdateIntegration = asyncHandler(async (req, res) => {
+    const { name, type, apiKey, apiSecret, settings } = req.body;
 
-    const integration = new Integration({
-        name,
-        apiKey,
-        apiSecret,
-        sellerId,
-        settings
-    });
-
-    const createdIntegration = await integration.save();
-    res.status(201).json(createdIntegration);
-});
-
-// Entegrasyon güncelleme
-exports.updateIntegration = asyncHandler(async (req, res) => {
-    const integration = await Integration.findById(req.params.id);
+    let integration = await Integration.findOne({ name });
 
     if (integration) {
-        integration.name = req.body.name || integration.name;
-        integration.apiKey = req.body.apiKey || integration.apiKey;
-        integration.apiSecret = req.body.apiSecret || integration.apiSecret;
-        integration.sellerId = req.body.sellerId || integration.sellerId;
-        integration.settings = req.body.settings || integration.settings;
-
-        const updatedIntegration = await integration.save();
-        res.json(updatedIntegration);
+        integration.type = type;
+        integration.apiKey = apiKey;
+        integration.apiSecret = apiSecret;
+        integration.settings = settings;
+        integration = await integration.save();
     } else {
-        res.status(404).json({ message: 'Integration not found' });
+        integration = new Integration({ name, type, apiKey, apiSecret, settings });
+        integration = await integration.save();
     }
+
+    res.status(201).json(integration);
 });
 
 // Entegrasyon silme
@@ -52,4 +38,3 @@ exports.deleteIntegration = asyncHandler(async (req, res) => {
         res.status(404).json({ message: 'Integration not found' });
     }
 });
-

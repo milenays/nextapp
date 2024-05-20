@@ -5,15 +5,15 @@ const integrationSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    type: {
+        type: String,
+        required: true,
+    },
     apiKey: {
         type: String,
         required: true,
     },
     apiSecret: {
-        type: String,
-        required: true,
-    },
-    sellerId: {
         type: String,
         required: true,
     },
@@ -25,4 +25,6 @@ const integrationSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-module.exports = mongoose.model('Integration', integrationSchema);
+const Integration = mongoose.model('Integration', integrationSchema);
+
+module.exports = Integration;

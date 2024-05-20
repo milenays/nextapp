@@ -1,34 +1,30 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-const userSchema = new mongoose.Schema({
+const userSchema = mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
     },
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
     password: {
         type: String,
-        required: true
+        required: true,
     },
     role: {
         type: String,
         required: true,
-        enum: ['admin', 'depo_yöneticisi', 'muhasebe_yöneticisi'],
-        default: 'depo_yöneticisi'
-    }
+        default: 'user',
+    },
 }, {
-    timestamps: true
+    timestamps: true,
 });
 
-userSchema.methods.matchPassword = async function (enteredPassword) {
-    return await bcrypt.compare(enteredPassword, this.password);
-}
-
+// Şifreyi hashleme
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) {
         next();

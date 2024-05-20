@@ -51,7 +51,7 @@ const Dashboard = () => {
                     </Pie>
                     <Tooltip />
                     <Legend />
-                </PieChart>
+                </PieChart> {/* Bu satırı ekleyin */}
             </div>
 
             <div className="mb-8 bg-white p-4 rounded-lg shadow-md">

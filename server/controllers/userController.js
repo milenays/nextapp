@@ -33,7 +33,7 @@ exports.addUser = asyncHandler(async (req, res) => {
         name: createdUser.name,
         email: createdUser.email,
         role: createdUser.role,
-        token: generateToken(createdUser._id) // Bu satırı kontrol edelim
+        token: generateToken(createdUser._id)
     });
 });
 
@@ -56,7 +56,8 @@ exports.updateUser = asyncHandler(async (req, res) => {
             _id: updatedUser._id,
             name: updatedUser.name,
             email: updatedUser.email,
-            role: updatedUser.role
+            role: updatedUser.role,
+            token: generateToken(updatedUser._id)
         });
     } else {
         res.status(404);
@@ -71,6 +72,33 @@ exports.deleteUser = asyncHandler(async (req, res) => {
     if (user) {
         await user.remove();
         res.json({ message: 'User removed' });
+    } else {
+        res.status(404);
+        throw new Error('User not found');
+    }
+});
+
+// Kullanıcı profilini güncelleme
+exports.updateUserProfile = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+
+        if (req.body.password) {
+            user.password = req.body.password;
+        }
+
+        const updatedUser = await user.save();
+
+        res.json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            role: updatedUser.role,
+            token: generateToken(updatedUser._id)
+        });
     } else {
         res.status(404);
         throw new Error('User not found');

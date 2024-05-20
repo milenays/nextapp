@@ -33,6 +33,7 @@ exports.addUser = asyncHandler(async (req, res) => {
         name: createdUser.name,
         email: createdUser.email,
         role: createdUser.role
+        token: generateToken(createdUser._id)
     });
 });
 

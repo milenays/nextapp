@@ -2,14 +2,13 @@ const mongoose = require('mongoose');
 
 const orderItemSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    qty: { type: Number, required: true },
-    image: { type: String, required: true },
+    quantity: { type: Number, required: true },
     price: { type: Number, required: true },
     product: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
-        required: true
-    }
+        required: true,
+    },
 }, {
     timestamps: true,
 });
@@ -77,4 +76,6 @@ const orderSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-module.exports = mongoose.model('Order', orderSchema);
+const Order = mongoose.model('Order', orderSchema);
+
+module.exports = Order;

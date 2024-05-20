@@ -1,85 +1,50 @@
+const asyncHandler = require('express-async-handler');
 const User = require('../models/User');
-const jwt = require('jsonwebtoken');
+const generateToken = require('../utils/generateToken');
 
-// JWT oluşturma fonksiyonu
-const generateToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: '30d',
-    });
-};
+// Kullanıcıları listeleme
+exports.getUsers = asyncHandler(async (req, res) => {
+    const users = await User.find({});
+    res.json(users);
+});
 
-// Kullanıcı kayıt işlemi
-exports.registerUser = async (req, res) => {
+// Kullanıcı ekleme
+exports.addUser = asyncHandler(async (req, res) => {
     const { name, email, password, role } = req.body;
 
     const userExists = await User.findOne({ email });
 
     if (userExists) {
-        return res.status(400).json({ message: 'User already exists' });
+        res.status(400);
+        throw new Error('User already exists');
     }
 
-    const user = await User.create({
+    const user = new User({
         name,
         email,
         password,
-        role,
+        role
     });
 
-    if (user) {
-        res.status(201).json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            token: generateToken(user._id),
-        });
-    } else {
-        res.status(400).json({ message: 'Invalid user data' });
-    }
-};
+    const createdUser = await user.save();
 
-// Kullanıcı giriş işlemi
-exports.authUser = async (req, res) => {
-    const { email, password } = req.body;
+    res.status(201).json({
+        _id: createdUser._id,
+        name: createdUser.name,
+        email: createdUser.email,
+        role: createdUser.role
+    });
+});
 
-    const user = await User.findOne({ email });
-
-    if (user && (await user.matchPassword(password))) {
-        res.json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            token: generateToken(user._id),
-        });
-    } else {
-        res.status(401).json({ message: 'Invalid email or password' });
-    }
-};
-
-// Kullanıcı profili getir
-exports.getUserProfile = async (req, res) => {
-    const user = await User.findById(req.user.id);
-
-    if (user) {
-        res.json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-        });
-    } else {
-        res.status(404).json({ message: 'User not found' });
-    }
-};
-
-// Kullanıcı profili güncelleme
-exports.updateUserProfile = async (req, res) => {
-    const user = await User.findById(req.user.id);
+// Kullanıcı güncelleme
+exports.updateUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id);
 
     if (user) {
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
+        user.role = req.body.role || user.role;
+
         if (req.body.password) {
             user.password = req.body.password;
         }
@@ -90,10 +55,23 @@ exports.updateUserProfile = async (req, res) => {
             _id: updatedUser._id,
             name: updatedUser.name,
             email: updatedUser.email,
-            role: updatedUser.role,
-            token: generateToken(updatedUser._id),
+            role: updatedUser.role
         });
     } else {
-        res.status(404).json({ message: 'User not found' });
+        res.status(404);
+        throw new Error('User not found');
     }
-};
+});
+
+// Kullanıcı silme
+exports.deleteUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id);
+
+    if (user) {
+        await user.remove();
+        res.json({ message: 'User removed' });
+    } else {
+        res.status(404);
+        throw new Error('User not found');
+    }
+});
